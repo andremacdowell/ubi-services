@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AndroidSddlExample</string>
+    
+    <!-- Static TextViews -->
+    <string name="ip">Gateway IP: </string>
+    
+    <!-- Static Button Texts -->
+    <string name="ping">Ping!</string>
+    <string name="connect">Connect!</string>
+
+</resources>

@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:gravity="center" >
+
+    <LinearLayout android:id="@+id/lytLinear"
+        android:layout_width="@dimen/textAndEditW"
+        android:layout_height="wrap_content"
+    	android:paddingBottom="@dimen/textAndEditPaddingB" >
+		
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ip"
+    		android:paddingRight="@dimen/textAndEditPaddingR" />
+        
+        <EditText android:id="@+id/etIp" 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text|number" />
+        
+    </LinearLayout>
+    
+    <Button android:id="@+id/btnPing"
+        android:layout_width="@dimen/bigBtnW"
+        android:layout_height="@dimen/bigBtnH" />
+
+</LinearLayout>
