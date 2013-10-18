@@ -1,15 +1,23 @@
-package puc.pos.ubiqua.sddlexample.connection;
+package lac.puc.ubi.services.sddlexample.connection;
 
+import java.io.Serializable;
 import java.net.SocketAddress;
 import java.util.List;
 
 import lac.cnclib.net.NodeConnection;
 import lac.cnclib.net.NodeConnectionListener;
-import puc.pos.ubiqua.sddlexample.modellibrary.PingInfo;
+import lac.puc.ubi.services.modellibrary.PingInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+/**
+ * Listener para mensagens do Controlador. 
+ * Separa as mensagens e envia para tratamento no handler registrado.
+ * 
+ * @author andremd
+ *
+ */
 public class MyNodeConnectionListener implements NodeConnectionListener {
 
 	private Handler handler;
@@ -40,10 +48,11 @@ public class MyNodeConnectionListener implements NodeConnectionListener {
 	}
 
 	@SuppressWarnings("unused")
-	private void handleNewEvent(String className, PingInfo obj) {
+	private void handleNewEvent(String className, Serializable obj) {
 		Bundle bund = new Bundle();
 		bund.putString("status", "event");
 		bund.putString("className", className);
+		bund.putSerializable("obj", obj);
 		Message msg = new Message();
 		msg.setData(bund);
 		handler.sendMessage(msg);
@@ -62,14 +71,14 @@ public class MyNodeConnectionListener implements NodeConnectionListener {
 	public void disconnected(NodeConnection remoteCon) {
 		handleNewStatus("disconnected");
 	}
-
+	
 	public void newMessageReceived(NodeConnection remoteCon,
 			lac.cnclib.sddl.message.Message message) {
 		String className = message.getContentObject().getClass().getCanonicalName();
 		Object obj = message.getContentObject();
 		if (className != null) {
 			if (className.equals(PingInfo.class.getCanonicalName())) {
-				handleNewMessage((String) obj);
+				handleNewMessage(obj.toString());
 			}
 		}
 		else {

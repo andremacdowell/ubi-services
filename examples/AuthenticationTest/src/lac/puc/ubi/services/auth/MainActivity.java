@@ -1,9 +1,10 @@
-package puc.pos.ubiqua.sddlexample;
+package lac.puc.ubi.services.auth;
 
 import java.util.UUID;
 
-import puc.pos.ubiqua.sddlexample.connection.ConnectionTask;
-import puc.pos.ubiqua.sddlexample.connection.PingTask;
+import lac.puc.ubi.services.R;
+import lac.puc.ubi.services.auth.connection.ConnectionTask;
+import lac.puc.ubi.services.modellibrary.AuthInfo;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -16,48 +17,50 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * MainActivity. Tela inicial da aplicação exemplo. 
+ * O handler de mensagens recebidas está aqui.
+ * 
+ * @author andremd
+ *
+ */
 public class MainActivity extends Activity {
 
+	private static String IP = "192.168.1.255";
+	
 	private static Handler msgHandler;
 	private Context context;
-	private Boolean connected;
 	private ConnectionTask connectionTask;
-	private PingTask pingTask;
+	private AuthInfo info;
 	
 	//Widgets
-	private EditText et_ip;
-	private Button btn_ping;
+	private EditText et_email;
+	private EditText et_pass;
+	private Button btn_connect;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		btn_ping = (Button) findViewById(R.id.btnPing);
-		et_ip = (EditText) findViewById(R.id.etIp);
+		btn_connect = (Button) findViewById(R.id.btnConnect);
+		et_email = (EditText) findViewById(R.id.etEmail);
+		et_pass = (EditText) findViewById(R.id.etPass);
 		
-		connected = false;
 		context = this;
 		initHandler();
-		btn_ping.setText(R.string.connect);
 		
-		if(btn_ping != null)
+		if(btn_connect != null)
 		{
-			btn_ping.setOnClickListener( new OnClickListener()
+			btn_connect.setOnClickListener( new OnClickListener()
 		    {
 				@Override
 				public void onClick(View v) 
 				{
-					if(!connected) //connect!
-					{
-						connectionTask = new ConnectionTask(et_ip.getText().toString(), msgHandler, MainActivity.this.getApplicationContext());
-						connectionTask.execute();
-					}
-					else //ping!
-					{
-						pingTask = new PingTask(connectionTask.getMyConnection(), new UUID(1,1));
-						pingTask.execute();
-					}
+					info = new AuthInfo(new UUID(1,1), et_email.getText().toString(), et_pass.getText().toString());
+					
+					connectionTask = new ConnectionTask(IP, msgHandler, MainActivity.this.getApplicationContext(), info);
+					connectionTask.execute();
 				} 	
 		    });
 		}
@@ -79,19 +82,15 @@ public class MainActivity extends Activity {
 				
 				if (status.equals("connected")) {
 					Toast.makeText(context, "Conectado!", Toast.LENGTH_SHORT).show();
-					connected = true;
-					et_ip.setText(R.string.ping);
 				}
 				else if (status.equals("disconnected")) {
 					Toast.makeText(context, "Desconectado!", Toast.LENGTH_SHORT).show();
-					connected = false;
-					et_ip.setText(R.string.connect);
 				}
 				else if (status.equals("message")) {
-					Toast.makeText(context, msg.getData().getString("message"), Toast.LENGTH_LONG).show(); //Pong!
+					Toast.makeText(context, msg.getData().getString("message"), Toast.LENGTH_LONG).show();
 				}
 				else if (status.equals("event")) {
-					//event, never gets in here because listener is ignoring this case
+					//outro tipo de evento, podemos usar isso para tratar o recebimento de outros tipos de objetos
 				}
 			}
 		}

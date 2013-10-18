@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Authentication Test</string>
+    
+    <!-- Static TextViews -->
+    <string name="email">Email: </string>
+    <string name="pass">Password: </string>
+    
+    <!-- Static Button Texts -->
+    <string name="ping">Ping!</string>
+    <string name="connect">Connect!</string>
+
+</resources>

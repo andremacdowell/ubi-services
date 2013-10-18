@@ -1,8 +1,16 @@
-package puc.pos.ubiqua.sddlexample.modellibrary;
+package lac.puc.ubi.services.modellibrary;
 
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * Serializavel PingInfo. 
+ * Será visto tanto pelo Cliente Android quando pela Módulo Controlador, então 
+ * recomenda-se que fique em algum tipo de projeto-library visto pelos dois.
+ * 
+ * @author andremd
+ *
+ */
 public class PingInfo implements Serializable {
 	
 	/**
@@ -33,6 +41,6 @@ public class PingInfo implements Serializable {
      **/
     @Override
     public String toString() {
-    	return "Event Pong!";
+    	return "Pong!";
 	}
 }
