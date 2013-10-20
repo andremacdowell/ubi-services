@@ -16,14 +16,14 @@ public class CoreThreads {
     public static void initialize() {
         StartRegistryCoreServer coreserver = new StartRegistryCoreServer();
         Thread coreserver_thread = new Thread(coreserver);
-        System.out.print("Iniciando thread do servidor... ");
+        System.out.print("Iniciando thread do RegistryCoreServer... ");
         coreserver_thread.start();
         System.out.println("Pronto.");
 
-        StartRegistryCoreClient coreclient = new StartRegistryCoreClient();
-        Thread coreclient_thread = new Thread(coreclient);
-        System.out.print("Iniciando thread do cliente... ");
-        coreclient_thread.start();
-        System.out.println("Pronto.");
+//        StartRegistryCoreClient coreclient = new StartRegistryCoreClient();
+//        Thread coreclient_thread = new Thread(coreclient);
+//        System.out.print("Iniciando thread do RegistryCoreClient... ");
+//        coreclient_thread.start();
+//        System.out.println("Pronto.");
     }
 }

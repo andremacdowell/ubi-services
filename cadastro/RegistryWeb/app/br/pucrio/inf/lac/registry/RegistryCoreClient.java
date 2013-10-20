@@ -16,55 +16,68 @@ import lac.cnclib.sddl.serialization.Serialization;
 
 public class RegistryCoreClient implements NodeConnectionListener {
 
-    private static String           gatewayIP   = "127.0.0.1";
-    private static int              gatewayPort = 5500;
-    private MrUdpNodeConnection     connection;
+	private static String gatewayIP = "127.0.0.1";
+	private static int gatewayPort = 5500;
+	private MrUdpNodeConnection connection;
 
-    public RegistryCoreClient() {
-        InetSocketAddress address = new InetSocketAddress(gatewayIP, gatewayPort);
-        try {
-            connection = new MrUdpNodeConnection();
-            connection.connect(address);
-            connection.addNodeConnectionListener(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public static void main(String[] args) {
+		Logger.getLogger("").setLevel(Level.OFF);
 
-    @Override
-    public void connected(NodeConnection remoteCon) {
-        System.out.println("Conectou");
-        ApplicationMessage message = new ApplicationMessage();
+		new RegistryCoreClient();
+	}
 
-        try {
-            remoteCon.sendMessage(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public RegistryCoreClient() {
+		InetSocketAddress address = new InetSocketAddress(gatewayIP,
+				gatewayPort);
+		try {
+			connection = new MrUdpNodeConnection();
+			connection.connect(address);
+			connection.addNodeConnectionListener(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void newMessageReceived(NodeConnection remoteCon, Message message) {
-        System.out.println(message.getContentObject());
-    }
+	@Override
+	public void connected(NodeConnection remoteCon) {
+		System.out.println("[RegistryCoreClient] Conectou, enviando saudação.");
+		ApplicationMessage appMessage = new ApplicationMessage();
+		String serializableContent = "Registering mobile node requested by client.";
+		appMessage.setContentObject(serializableContent);
 
-    // other methods
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void reconnected(NodeConnection remoteCon, SocketAddress endPoint, boolean wasHandover, boolean wasMandatory) {
-        System.out.println("Reconectou");
-    }
+	@Override
+	public void newMessageReceived(NodeConnection remoteCon, Message message) {
+		System.out
+				.println("[RegistryCoreClient] Mensagem recebida do servidor: "
+						+ Serialization.fromJavaByteStream(message.getContent()));
+	}
 
-    @Override
-    public void disconnected(NodeConnection remoteCon) {
-        System.out.println("Desconectou");
-    }
+	// other methods
 
-    @Override
-    public void unsentMessages(NodeConnection remoteCon, List<Message> unsentMessages) {
-    }
+	@Override
+	public void reconnected(NodeConnection remoteCon, SocketAddress endPoint,
+			boolean wasHandover, boolean wasMandatory) {
+		System.out.println("[RegistryCoreClient] Reconectou");
+	}
 
-    @Override
-    public void internalException(NodeConnection remoteCon, Exception e) {
-    }
+	@Override
+	public void disconnected(NodeConnection remoteCon) {
+		System.out.println("[RegistryCoreClient] Desconectou");
+	}
+
+	@Override
+	public void unsentMessages(NodeConnection remoteCon,
+			List<Message> unsentMessages) {
+	}
+
+	@Override
+	public void internalException(NodeConnection remoteCon, Exception e) {
+	}
 }
