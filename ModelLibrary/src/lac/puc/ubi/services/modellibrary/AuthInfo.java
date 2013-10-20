@@ -41,7 +41,7 @@ public class AuthInfo implements Serializable {
 	public void setUuid(UUID uuid) {
 		this.uuid = uuid;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -50,11 +50,17 @@ public class AuthInfo implements Serializable {
 		return password;
 	}
 	
+	public String getTypeName() {
+		return "authNode";
+	}
+	
 	/**
      * {@inheritDoc}
      **/
     @Override
     public String toString() {
-    	return "Event Authentication: \n uuid: " + uuid + "\n email: " + email + "\n pass: " + password + "\n";
+    	return "uuid:" + uuid + "|" + "email:" + email + "|" + "pass:" + password;
 	}
+    
+    
 }

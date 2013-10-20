@@ -75,7 +75,7 @@ public class ConnectionTask extends AsyncTask<Void, byte[], Boolean> {
 	{
 		if(result)
 		{
-			AuthTask authTask = new AuthTask(myConnection, authInfo);
+			RequestTask authTask = new RequestTask(myConnection, authInfo.getUuid(), authInfo.getTypeName(), authInfo.toString());
 			authTask.execute();
 		}
 		else
