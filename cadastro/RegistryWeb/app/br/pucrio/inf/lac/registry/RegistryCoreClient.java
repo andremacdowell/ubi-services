@@ -13,9 +13,10 @@ import lac.cnclib.net.mrudp.MrUdpNodeConnection;
 import lac.cnclib.sddl.message.ApplicationMessage;
 import lac.cnclib.sddl.message.Message;
 import lac.cnclib.sddl.serialization.Serialization;
+import modellibrary.RequestInfo;
+import modellibrary.ResponseInfo;
 
 public class RegistryCoreClient implements NodeConnectionListener {
-
 	private static String gatewayIP = "127.0.0.1";
 	private static int gatewayPort = 5500;
 	private MrUdpNodeConnection connection;
@@ -50,6 +51,8 @@ public class RegistryCoreClient implements NodeConnectionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		// REQUEST
 	}
 
 	@Override
@@ -57,6 +60,26 @@ public class RegistryCoreClient implements NodeConnectionListener {
 		System.out
 				.println("[RegistryCoreClient] Mensagem recebida do servidor: "
 						+ Serialization.fromJavaByteStream(message.getContent()));
+
+		String className = message.getContentObject().getClass()
+				.getCanonicalName();
+
+		if (className != null) {
+			// RESPONSE
+			if (className.equals(ResponseInfo.class.getCanonicalName())) {
+				ResponseInfo resp = (ResponseInfo) Serialization
+						.fromJavaByteStream(message.getContent());
+				System.out.println("[RegistryCoreClient] Response type: "
+						+ resp.getType() + " | payload: " + resp.getPayload());
+			} else {
+				System.out
+						.println("[RegistryCoreClient] Objeto desconhecido recebido do servidor: "
+								+ className);
+			}
+		} else {
+			System.out
+					.println("[RegistryCoreClient] Objeto inválido recebido do servidor");
+		}
 	}
 
 	// other methods

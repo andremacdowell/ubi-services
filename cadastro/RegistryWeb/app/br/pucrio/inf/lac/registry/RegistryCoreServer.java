@@ -1,5 +1,7 @@
 package br.pucrio.inf.lac.registry;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import play.libs.Json;
@@ -14,6 +16,8 @@ import lac.cnet.sddl.objects.PrivateMessage;
 import lac.cnet.sddl.udi.core.SddlLayer;
 import lac.cnet.sddl.udi.core.UniversalDDSLayerFactory;
 import lac.cnet.sddl.udi.core.listener.UDIDataReaderListener;
+import modellibrary.RequestInfo;
+import modellibrary.ResponseInfo;
 
 public class RegistryCoreServer implements
 		UDIDataReaderListener<ApplicationObject> {
@@ -46,32 +50,50 @@ public class RegistryCoreServer implements
 	@Override
 	public void onNewData(ApplicationObject topicSample) {
 		Message message = (Message) topicSample;
+
 		System.out
 				.println("[RegistryCoreServer] Mensagem recebida do cliente: "
 						+ Serialization.fromJavaByteStream(message.getContent()));
 
-		PrivateMessage privateMessage = new PrivateMessage();
-		privateMessage.setGatewayId(message.getGatewayId());
-		privateMessage.setNodeId(message.getSenderId());
+		String className = message.getContent().getClass().getCanonicalName();
 
-		JsonNode result_json = Json.newObject();
-		System.out
-				.println("[RegistryCoreServer] lstNodes() requested by client");
-		result_json = CrudLib.lstNodes();
+		if (className != null) {
+			if (className.equals(RequestInfo.class.getCanonicalName())) {
+				// REQUEST
+				RequestInfo req = (RequestInfo) Serialization
+						.fromJavaByteStream(message.getContent());
+				System.out.println("[RegistryCoreServer] Request type: "
+						+ req.getType() + " | payload: " + req.getPayload());
 
-		ApplicationMessage appMessage = new ApplicationMessage();
-		// appMessage.setContentObject("Recebi do cliente: " +
-		// Serialization.fromJavaByteStream(message.getContent()));
-		appMessage.setContentObject(result_json.toString());
-		privateMessage.setMessage(Serialization.toProtocolMessage(appMessage));
+				// RESPONSE
+				PrivateMessage privateMessage = new PrivateMessage();
+				privateMessage.setGatewayId(message.getGatewayId());
+				privateMessage.setNodeId(message.getSenderId());
 
-		core.writeTopic(PrivateMessage.class.getSimpleName(), privateMessage);
+				JsonNode result_json = Json.newObject();
+				System.out
+						.println("[RegistryCoreServer] lstNodes() requested by client");
+				result_json = CrudLib.lstNodes();
+
+				ApplicationMessage appMessage = new ApplicationMessage();
+				appMessage.setContentObject(result_json.toString());
+				privateMessage.setMessage(Serialization
+						.toProtocolMessage(appMessage));
+
+				core.writeTopic(PrivateMessage.class.getSimpleName(),
+						privateMessage);
+			} else {
+				System.out
+						.println("[RegistryCoreServer] Objeto desconhecido recebido do cliente: "
+								+ className);
+			}
+		} else {
+			System.out
+					.println("[RegistryCoreServer] Objeto inválido recebido do cliente");
+		}
 	}
 }
 
-// Criando um node via ORM:
-// Node node = new Node();
-// node.name = "Oi";
-// node.uuid = "12345";
-// node.info = "xxx";
-// node.save();
+// Serializable serializable =
+// Serialization.fromJavaByteStream(message.getContent());
+// String className = serializable.getClass().getCanonicalName();
