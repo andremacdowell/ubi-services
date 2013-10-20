@@ -15,15 +15,19 @@ public class CrudLib {
 		ObjectNode result = Json.newObject();
 		JsonNode result_json = Json.newObject();
 
+		result.put("type", "addNode");
+
 		try {
 			Node node = Json.fromJson(json, Node.class);
 			System.out.println("[CrudLib] Salvando node: " + Json.toJson(node));
 			node.save();
 			result.put("status", "OK");
-			result.put("message", "Node added: " + Json.toJson(node));
+			result.put("message", "Node added");
+			result.put("payload", Json.toJson(node));
 		} catch (Exception e) {
 			result.put("status", "ERR");
-			result.put("message", "Node not added: " + e);
+			result.put("message", "Node not added");
+			result.put("payload", e.toString());
 		}
 
 		result_json = Json.fromJson(result, JsonNode.class);
@@ -37,33 +41,47 @@ public class CrudLib {
 		System.out.println("[CrudLib] Pesquisando node por uuid ou name: "
 				+ uuid_name);
 
+		result.put("type", "getNode");
+
 		List<Node> uuidlist = Node.find.where().ieq("uuid", uuid_name)
 				.findList();
 		List<Node> namelist = Node.find.where().ieq("name", uuid_name)
 				.findList();
+
 		if (!uuidlist.isEmpty()) {
 			System.out.println("[CrudLib] Encontrado node por uuid: "
 					+ uuid_name);
-			result_json = Json.toJson(uuidlist);
+			result.put("status", "OK");
+			result.put("message", "Node found by uuid");
+			result.put("payload", Json.toJson(uuidlist));
 		} else if (!namelist.isEmpty()) {
 			System.out.println("[CrudLib] Encontrado node por name: "
 					+ uuid_name);
-			result_json = Json.toJson(namelist);
+			result.put("status", "OK");
+			result.put("message", "Node found by name");
+			result.put("payload", Json.toJson(namelist));
 		} else {
 			result.put("status", "ERR");
-			result.put("message", "Node not found: " + uuid_name);
-			result_json = Json.fromJson(result, JsonNode.class);
+			result.put("message", "Node not found");
+			result.put("payload", uuid_name);
 		}
 
+		result_json = Json.fromJson(result, JsonNode.class);
 		return result_json;
 	}
 
 	// # Nodes list
 	public static JsonNode lstNodes() {
+		ObjectNode result = Json.newObject();
 		JsonNode result_json = Json.newObject();
 		System.out.println("[CrudLib] Listando todos os nodes");
 
-		result_json = Json.toJson(Node.find.all());
+		result.put("status", "OK");
+		result.put("message", "Node list");
+		result.put("type", "lstNodes");
+		result.put("payload", Json.toJson(Node.find.all()));
+
+		result_json = Json.fromJson(result, JsonNode.class);
 		return result_json;
 	}
 
@@ -75,25 +93,32 @@ public class CrudLib {
 				.println("[CrudLib] Pesquisando node por uuid ou name contendo: "
 						+ uuid_name);
 
+		result.put("type", "srchNodes");
+
 		List<Node> uuidlist = Node.find.where()
 				.ilike("uuid", "%" + uuid_name + "%").findList();
 		List<Node> namelist = Node.find.where()
 				.ilike("name", "%" + uuid_name + "%").findList();
+
 		if (!uuidlist.isEmpty()) {
 			System.out.println("[CrudLib] Encontrado node por uuid contendo: "
 					+ uuid_name);
-			result_json = Json.toJson(uuidlist);
+			result.put("status", "OK");
+			result.put("message", "Nodes found by uuid");
+			result.put("payload", Json.toJson(uuidlist));
 		} else if (!namelist.isEmpty()) {
 			System.out.println("[CrudLib] Encontrado node por name contendo: "
 					+ uuid_name);
-			result_json = Json.toJson(namelist);
+			result.put("status", "OK");
+			result.put("message", "Nodes found by name");
+			result.put("payload", Json.toJson(namelist));
 		} else {
 			result.put("status", "ERR");
-			result.put("message", "No node was found with substring: "
-					+ uuid_name);
-			result_json = Json.fromJson(result, JsonNode.class);
+			result.put("message", "No node found");
+			result.put("payload", "Substring search: " + uuid_name);
 		}
 
+		result_json = Json.fromJson(result, JsonNode.class);
 		return result_json;
 	}
 
@@ -103,6 +128,8 @@ public class CrudLib {
 		JsonNode result_json = Json.newObject();
 		System.out.println("[CrudLib] Atualizando node: " + uuid_name
 				+ " com o conteudo: " + json);
+
+		result.put("type", "updNode");
 
 		try {
 			Node uuidnode = Node.find.where().ieq("uuid", uuid_name)
@@ -116,8 +143,8 @@ public class CrudLib {
 						+ uuid_name + "\" com conteúdo: " + Json.toJson(node));
 				uuidnode.save();
 				result.put("status", "OK");
-				result.put("message", "Node updated by uuid \"" + uuid_name
-						+ "\" with content: " + Json.toJson(node));
+				result.put("message", "Node updated by uuid");
+				result.put("payload", Json.toJson(node));
 				result_json = Json.fromJson(result, JsonNode.class);
 				return result_json;
 			}
@@ -137,8 +164,8 @@ public class CrudLib {
 						+ uuid_name + "\" com conteúdo: " + Json.toJson(node));
 				namenode.save();
 				result.put("status", "OK");
-				result.put("message", "Node updated by name \"" + uuid_name
-						+ "\" with content: " + Json.toJson(node));
+				result.put("message", "Node updated by name");
+				result.put("payload", Json.toJson(node));
 				result_json = Json.fromJson(result, JsonNode.class);
 				return result_json;
 			}
@@ -147,7 +174,9 @@ public class CrudLib {
 		}
 
 		result.put("status", "ERR");
-		result.put("message", "Node not found: " + uuid_name);
+		result.put("message", "Node not found");
+		result.put("payload", uuid_name);
+
 		result_json = Json.fromJson(result, JsonNode.class);
 		return result_json;
 	}
@@ -159,6 +188,8 @@ public class CrudLib {
 		System.out.println("[CrudLib] Deletando node por uuid ou name: "
 				+ uuid_name);
 
+		result.put("type", "delNode");
+
 		try {
 			Node uuidnode = Node.find.where().ieq("uuid", uuid_name)
 					.findUnique();
@@ -167,7 +198,8 @@ public class CrudLib {
 						+ uuid_name);
 				uuidnode.delete();
 				result.put("status", "OK");
-				result.put("message", "Node deleted by uuid: " + uuid_name);
+				result.put("message", "Node deleted by uuid");
+				result.put("payload", uuid_name);
 				result_json = Json.fromJson(result, JsonNode.class);
 				return result_json;
 			}
@@ -183,7 +215,8 @@ public class CrudLib {
 						+ uuid_name);
 				namenode.delete();
 				result.put("status", "OK");
-				result.put("message", "Node deleted by name: " + uuid_name);
+				result.put("message", "Node deleted by name");
+				result.put("payload", uuid_name);
 				result_json = Json.fromJson(result, JsonNode.class);
 				return result_json;
 			}
@@ -192,7 +225,8 @@ public class CrudLib {
 		}
 
 		result.put("status", "ERR");
-		result.put("message", "Node not found: " + uuid_name);
+		result.put("message", "Node not found");
+		result.put("payload", uuid_name);
 		result_json = Json.fromJson(result, JsonNode.class);
 		return result_json;
 	}

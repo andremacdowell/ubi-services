@@ -20,6 +20,8 @@ public class API extends Controller {
 		if (json == null) {
 			result.put("status", "ERR");
 			result.put("message", "Node not added: Expecting Json data");
+			result.put("type", "addNode");
+			result.put("payload", "");
 			return badRequest(result);
 		} else {
 			result_json = CrudLib.addNode(json);
@@ -70,6 +72,8 @@ public class API extends Controller {
 		if (json == null) {
 			result.put("status", "ERR");
 			result.put("message", "Node not updated: Expecting Json data");
+			result.put("type", "updNode");
+			result.put("payload", "");
 			return badRequest(result);
 		} else {
 			result_json = CrudLib.updNode(uuid_name, json);
