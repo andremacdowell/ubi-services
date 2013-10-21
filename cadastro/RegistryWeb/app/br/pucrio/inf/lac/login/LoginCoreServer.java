@@ -57,8 +57,11 @@ public class LoginCoreServer implements
 				.getContent());
 		String className = serializable.getClass().getCanonicalName();
 		String uuid = message.getSenderId().toString();
+		String token = null;
+		String login = null;
+		String senha = null;
 
-		System.out.println("[LoginCoreServerr] Mensagem recebida do cliente: "
+		System.out.println("[LoginCoreServer] Mensagem recebida do cliente: "
 				+ Serialization.fromJavaByteStream(message.getContent())
 				+ "| className:" + className + " | uuid:" + uuid);
 
@@ -79,16 +82,12 @@ public class LoginCoreServer implements
 				switch (requestMessage.getType()) {
 				case "login":
 					JsonNode authReq = Json.parse(requestMessage.getPayload());
-					ObjectNode query = Json.newObject();
-					String login = authReq.get("login").toString();
-					String senha = authReq.get("senha").toString();
-					String token = authReq.get("token").toString();
 
-					query.put("uuid", message.getSenderId().toString());
-					json = CrudLib.getNode(query.toString());
-
-					if (token != null) {
-						if (json != null) {
+					json = CrudLib.getNode(message.getSenderId().toString());
+					System.out.println("json: " + json.toString());
+					if (authReq.get("token") != null) {
+						token = authReq.get("token").toString();
+						if (json.get("status").equals("OK")) {
 							if (token.equals(json.get("token").toString())) {
 								result.put("status", "OK");
 								result.put("message", "Login com sucesso");
@@ -105,17 +104,17 @@ public class LoginCoreServer implements
 								result_json = Json.fromJson(result,
 										JsonNode.class);
 							}
-						}
-						else {
+						} else {
 							result.put("status", "ERR");
 							result.put("message", "token inválido");
 							result.put("type", requestMessage.getType());
 							result.put("payload", "");
-							result_json = Json.fromJson(result,
-									JsonNode.class);
+							result_json = Json.fromJson(result, JsonNode.class);
 						}
 					} else {
 						// procurar login e senha
+						login = authReq.get("login").toString();
+						senha = authReq.get("senha").toString();
 						if (json != null) {
 							if (login.equals(json.get("login"))
 									&& senha.equals(json.get("senha"))) {
@@ -128,14 +127,16 @@ public class LoginCoreServer implements
 										JsonNode.class);
 							} else {
 								result.put("status", "ERR");
-								result.put("message", "login ou senha inválidos");
+								result.put("message",
+										"login ou senha inválidos");
 								result.put("type", requestMessage.getType());
 								result.put("payload", "");
 								result_json = Json.fromJson(result,
 										JsonNode.class);
 							}
 						} else {
-							// se não existir, criar e depois retornar a token
+							// se não existir, criar e depois retornar a
+							// token
 							ObjectNode newAuth = Json.newObject();
 							newAuth.put("login", login);
 							newAuth.put("senha", senha);
@@ -164,7 +165,7 @@ public class LoginCoreServer implements
 				case "logout":
 					ObjectNode upAuth = Json.newObject();
 					upAuth.put("token", "");
-					result_json = CrudLib.updNode(uuid, upAuth);					
+					result_json = CrudLib.updNode(uuid, upAuth);
 					break;
 				}
 

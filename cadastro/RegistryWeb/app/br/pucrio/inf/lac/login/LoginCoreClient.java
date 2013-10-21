@@ -53,7 +53,6 @@ public class LoginCoreClient implements NodeConnectionListener {
 	public void connected(NodeConnection remoteCon) {
 		System.out.println("[LoginCoreClient] Conectou, enviando saudação.");
 		ApplicationMessage appMessage = new ApplicationMessage();
-		String serializableContent = "";
 
 		// REQUEST login: passando login e senha (criação)
 		ObjectNode objLogin = Json.newObject();
@@ -64,11 +63,9 @@ public class LoginCoreClient implements NodeConnectionListener {
 		appMessage.setContentObject(requestMessage);
 		try {
 			remoteCon.sendMessage(appMessage);
+			Thread.sleep(5000);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		try {
-			Thread.sleep(5000);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 		}
@@ -81,11 +78,9 @@ public class LoginCoreClient implements NodeConnectionListener {
 		appMessage.setContentObject(requestMessage);
 		try {
 			remoteCon.sendMessage(appMessage);
+			Thread.sleep(5000);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		try {
-			Thread.sleep(5000);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 		}
@@ -95,11 +90,9 @@ public class LoginCoreClient implements NodeConnectionListener {
 		appMessage.setContentObject(requestMessage);
 		try {
 			remoteCon.sendMessage(appMessage);
+			Thread.sleep(5000);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		try {
-			Thread.sleep(5000);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 		}
