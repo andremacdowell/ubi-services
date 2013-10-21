@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import lac.cnclib.net.NodeConnection;
 import lac.cnclib.net.NodeConnectionListener;
 import lac.cnclib.net.mrudp.MrUdpNodeConnection;
@@ -74,9 +77,25 @@ public class RegistryCoreClient implements NodeConnectionListener {
 			e.printStackTrace();
 		}
 
+		JSONObject xresult = new JSONObject();
+		JSONObject xinfo = new JSONObject();
+
+		try {
+			xresult.put("uuid", "987654321");
+			xresult.put("name", "teste");
+			xinfo.put("email", "a@a.com");
+			xinfo.put("city", "cidade do usuario");
+			xinfo.put("phone", "555-555-555");
+			xinfo.put("birthday", "01/01/1970");
+			xinfo.put("pass", "senha_fraca");
+			xresult.put("info", xinfo.toString());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
 		ApplicationMessage appMessage4 = new ApplicationMessage();
 		RequestInfo requestMessage4 = new RequestInfo(
-				appMessage4.getSenderID(), "delNode", "teste");
+				appMessage4.getSenderID(), "addNode", xresult.toString());
 		appMessage4.setContentObject(requestMessage4);
 		try {
 			remoteCon.sendMessage(appMessage4);
@@ -86,7 +105,7 @@ public class RegistryCoreClient implements NodeConnectionListener {
 
 		ApplicationMessage appMessage5 = new ApplicationMessage();
 		RequestInfo requestMessage5 = new RequestInfo(
-				appMessage5.getSenderID(), "getNode", "teste");
+				appMessage5.getSenderID(), "delNode", "teste");
 		appMessage5.setContentObject(requestMessage5);
 		try {
 			remoteCon.sendMessage(appMessage5);
@@ -96,10 +115,46 @@ public class RegistryCoreClient implements NodeConnectionListener {
 
 		ApplicationMessage appMessage6 = new ApplicationMessage();
 		RequestInfo requestMessage6 = new RequestInfo(
-				appMessage6.getSenderID(), "lstNodes", "");
+				appMessage6.getSenderID(), "getNode", "teste");
 		appMessage6.setContentObject(requestMessage6);
 		try {
 			remoteCon.sendMessage(appMessage6);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject xresult2 = new JSONObject();
+		JSONObject xinfo2 = new JSONObject();
+
+		try {
+			xresult2.put("uuid", "98765432100000-00000");
+			xresult2.put("name", "teste_fica");
+			xinfo2.put("email", "a@a.org");
+			xinfo2.put("city", "cidade do usuario");
+			xinfo2.put("phone", "555-555-555");
+			xinfo2.put("birthday", "01/01/1970");
+			xinfo2.put("pass", "senha_forte");
+			xresult2.put("info", xinfo2.toString());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
+		ApplicationMessage appMessage7 = new ApplicationMessage();
+		RequestInfo requestMessage7 = new RequestInfo(
+				appMessage7.getSenderID(), "addNode", xresult2.toString());
+		appMessage7.setContentObject(requestMessage7);
+		try {
+			remoteCon.sendMessage(appMessage7);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		ApplicationMessage appMessage8 = new ApplicationMessage();
+		RequestInfo requestMessage8 = new RequestInfo(
+				appMessage8.getSenderID(), "lstNodes", "");
+		appMessage8.setContentObject(requestMessage8);
+		try {
+			remoteCon.sendMessage(appMessage8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
