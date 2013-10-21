@@ -42,100 +42,66 @@ public class RegistryCoreClient implements NodeConnectionListener {
 	@Override
 	public void connected(NodeConnection remoteCon) {
 		System.out.println("[RegistryCoreClient] Conectou, enviando saudação.");
-		ApplicationMessage appMessage = new ApplicationMessage();
-		String serializableContent = "Registering mobile node requested by client.";
-		appMessage.setContentObject(serializableContent);
-
-		try {
-			remoteCon.sendMessage(appMessage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		// REQUEST send
-
-		RequestInfo requestMessage = new RequestInfo(appMessage.getSenderID(),
-				"lstNodes", "");
-		appMessage.setContentObject(requestMessage);
+		ApplicationMessage appMessage1 = new ApplicationMessage();
+		RequestInfo requestMessage1 = new RequestInfo(
+				appMessage1.getSenderID(), "lstNodes", "");
+		appMessage1.setContentObject(requestMessage1);
 		try {
-			remoteCon.sendMessage(appMessage);
+			remoteCon.sendMessage(appMessage1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
-		}
 
-		requestMessage = new RequestInfo(appMessage.getSenderID(), "srchNodes",
-				"teste");
-		appMessage.setContentObject(requestMessage);
+		ApplicationMessage appMessage2 = new ApplicationMessage();
+		RequestInfo requestMessage2 = new RequestInfo(
+				appMessage2.getSenderID(), "srchNodes", "teste");
+		appMessage2.setContentObject(requestMessage2);
 		try {
-			remoteCon.sendMessage(appMessage);
+			remoteCon.sendMessage(appMessage2);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
-		}
 
-		requestMessage = new RequestInfo(appMessage.getSenderID(), "getNode",
-				"teste");
-		appMessage.setContentObject(requestMessage);
+		ApplicationMessage appMessage3 = new ApplicationMessage();
+		RequestInfo requestMessage3 = new RequestInfo(
+				appMessage3.getSenderID(), "getNode", "teste");
+		appMessage3.setContentObject(requestMessage3);
 		try {
-			remoteCon.sendMessage(appMessage);
+			remoteCon.sendMessage(appMessage3);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
-		}
 
-		requestMessage = new RequestInfo(appMessage.getSenderID(), "delNode",
-				"teste");
-		appMessage.setContentObject(requestMessage);
+		ApplicationMessage appMessage4 = new ApplicationMessage();
+		RequestInfo requestMessage4 = new RequestInfo(
+				appMessage4.getSenderID(), "delNode", "teste");
+		appMessage4.setContentObject(requestMessage4);
 		try {
-			remoteCon.sendMessage(appMessage);
+			remoteCon.sendMessage(appMessage4);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
-		}
 
-		requestMessage = new RequestInfo(appMessage.getSenderID(), "getNode",
-				"teste");
-		appMessage.setContentObject(requestMessage);
+		ApplicationMessage appMessage5 = new ApplicationMessage();
+		RequestInfo requestMessage5 = new RequestInfo(
+				appMessage5.getSenderID(), "getNode", "teste");
+		appMessage5.setContentObject(requestMessage5);
 		try {
-			remoteCon.sendMessage(appMessage);
+			remoteCon.sendMessage(appMessage5);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
-		}
 
-		requestMessage = new RequestInfo(appMessage.getSenderID(), "lstNodes",
-				"");
-		appMessage.setContentObject(requestMessage);
+		ApplicationMessage appMessage6 = new ApplicationMessage();
+		RequestInfo requestMessage6 = new RequestInfo(
+				appMessage6.getSenderID(), "lstNodes", "");
+		appMessage6.setContentObject(requestMessage6);
 		try {
-			remoteCon.sendMessage(appMessage);
+			remoteCon.sendMessage(appMessage6);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException ex) {
-			Thread.currentThread().interrupt();
 		}
 	}
 
