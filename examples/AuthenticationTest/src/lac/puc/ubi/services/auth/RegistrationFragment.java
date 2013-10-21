@@ -2,6 +2,10 @@ package lac.puc.ubi.services.auth;
 
 import lac.puc.ubi.services.R;
 import lac.puc.ubi.services.auth.connection.RequestTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -68,8 +72,21 @@ public class RegistrationFragment extends Fragment implements OnClickListener{
 
 	private String packageRegistrationInfo()
 	{
-		return "uuid:" + ap.uuid + "|" + "email:" + et_email.getText().toString() + "|" 
-				+ "name:" + et_name.getText().toString() + "|" + "city:" + et_city.getText().toString() + "|"
-				+ "phone:" + et_phone.getText().toString() + "|" + "birthday:" + dp_birth.toString() + "|" + "pass:" + et_pass.getText().toString();
+		JSONObject result = new JSONObject();
+		
+		try {
+			result.put("uuid", ap.uuid.toString());
+			result.put("email", et_email.getText().toString());
+			result.put("name", et_name.getText().toString());
+			result.put("city", et_city.getText().toString());
+			result.put("phone", et_phone.getText().toString());
+			result.put("birthday", dp_birth.toString());
+			result.put("pass", et_pass.getText().toString());
+			} catch (JSONException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return result.toString();
 	}
 }

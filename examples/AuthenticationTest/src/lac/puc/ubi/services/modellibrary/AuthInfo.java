@@ -3,6 +3,9 @@ package lac.puc.ubi.services.modellibrary;
 import java.io.Serializable;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Serializavel AuthInfo. 
  * Será visto tanto pelo Cliente Android quando pela Módulo Controlador, então 
@@ -59,7 +62,19 @@ public class AuthInfo implements Serializable {
      **/
     @Override
     public String toString() {
-    	return "uuid:" + uuid + "|" + "email:" + email + "|" + "pass:" + password;
+
+    	JSONObject result = new JSONObject();
+		
+		try {
+			result.put("uuid", uuid.toString());
+			result.put("email", email);
+			result.put("pass", password);
+			} catch (JSONException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return result.toString();
 	}
     
     
