@@ -3,18 +3,19 @@ package lac.puc.ubi.services.auth;
 import java.util.UUID;
 
 import lac.puc.ubi.services.R;
-import lac.puc.ubi.services.auth.connection.ConnectionTask;
-import lac.puc.ubi.services.modellibrary.AuthInfo;
+import lac.puc.ubi.services.auth.utils.TabsPagerAdapter;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
+import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
 /**
@@ -24,46 +25,77 @@ import android.widget.Toast;
  * @author andremd
  *
  */
-public class MainActivity extends Activity {
+@SuppressLint("NewApi")
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
-	private static String IP = "192.168.1.255";
-	
+	//Connection Control
+	private static String IP = "192.168.1.255";	
 	private static Handler msgHandler;
 	private Context context;
-	private ConnectionTask connectionTask;
-	private AuthInfo info;
+	private UUID clientUUID;
 	
-	//Widgets
-	private EditText et_email;
-	private EditText et_pass;
-	private Button btn_connect;
-	
+	//Interface
+	private ViewPager viewPager;
+	private TabsPagerAdapter mAdapter;
+	private ActionBar actionBar;
+	// Tab titles
+	private String[] tabs = {"Login", "New User"};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		btn_connect = (Button) findViewById(R.id.btnConnect);
-		et_email = (EditText) findViewById(R.id.etEmail);
-		et_pass = (EditText) findViewById(R.id.etPass);
+		/* Interface Initialization */
+		viewPager = (ViewPager) findViewById(R.id.pager);
+		actionBar = getActionBar();
+		mAdapter = new TabsPagerAdapter(getSupportFragmentManager(), tabs.length);
+		viewPager.setAdapter(mAdapter);
+		actionBar.setHomeButtonEnabled(false);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);		
 		
-		context = this;
-		initHandler();
-		
-		if(btn_connect != null)
-		{
-			btn_connect.setOnClickListener( new OnClickListener()
-		    {
-				@Override
-				public void onClick(View v) 
-				{
-					info = new AuthInfo(new UUID(1,1), et_email.getText().toString(), et_pass.getText().toString());
-					
-					connectionTask = new ConnectionTask(IP, msgHandler, MainActivity.this.getApplicationContext(), info);
-					connectionTask.execute();
-				} 	
-		    });
+		/* Adding Tabs */
+		for (String tab_name : tabs) {
+			actionBar.addTab(actionBar.newTab().setText(tab_name)
+					.setTabListener(this));
 		}
+
+		/**
+		 * on swiping the viewpager make respective tab selected
+		 * */
+		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+			@Override
+			public void onPageSelected(int position) {
+				// on changing the page
+				// make respected tab selected
+				actionBar.setSelectedNavigationItem(position);
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
+		
+		/* Server Message Handler */
+		recoverUUID();
+		initHandler();
+
+        ((App)getApplication()).setConnectionData(clientUUID, IP, msgHandler);
+	}
+	
+	private void recoverUUID()
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("uuid", prefs.getString("uuid", UUID.randomUUID().toString()));
+		editor.commit();
+		
+		clientUUID = UUID.fromString(prefs.getString("uuid", UUID.randomUUID().toString()));
 	}
 	
 	@SuppressLint("HandlerLeak")
@@ -96,4 +128,20 @@ public class MainActivity extends Activity {
 		}
 		};
 	}}
+	
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		// on tab selected
+		// show respected fragment view
+		viewPager.setCurrentItem(tab.getPosition());
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	}
+
 }

@@ -5,10 +5,14 @@
     
     <!-- Static TextViews -->
     <string name="email">Email: </string>
+    <string name="name">Name: </string>
     <string name="pass">Password: </string>
+    <string name="city">City: </string>
+    <string name="phone">Phone No.: </string>
+    <string name="birth">Birthday: </string>
     
     <!-- Static Button Texts -->
-    <string name="ping">Ping!</string>
     <string name="connect">Connect!</string>
+    <string name="register">Register!</string>
 
 </resources>

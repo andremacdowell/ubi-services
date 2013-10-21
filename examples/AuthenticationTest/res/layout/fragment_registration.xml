@@ -1,0 +1,93 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center" >
+
+    <ScrollView
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="@dimen/tabFragmentPaddingT"
+	    android:paddingBottom="@dimen/textAndEditPaddingB" >
+	    
+	    <LinearLayout android:id="@+id/lytLinear"
+	        android:layout_width="@dimen/textAndEditW"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+			
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/email"
+	    		android:paddingRight="@dimen/textAndEditPaddingR" />
+	        
+	        <EditText android:id="@+id/etEmail" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:inputType="textEmailAddress" />
+	        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/name"
+	    		android:paddingRight="@dimen/textAndEditPaddingR" />
+	        
+	        <EditText android:id="@+id/etName" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:inputType="text" />
+	        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/city"
+	    		android:paddingRight="@dimen/textAndEditPaddingR" />
+	        
+	        <EditText android:id="@+id/etCity" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:inputType="text" />
+	        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/phone"
+	    		android:paddingRight="@dimen/textAndEditPaddingR" />
+	        
+	        <EditText android:id="@+id/etPhone" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:inputType="phone" />
+	        
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/birth"
+	    		android:paddingRight="@dimen/textAndEditPaddingR" />
+	        
+	        <DatePicker android:id="@+id/dpBirth" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:calendarViewShown="false" />
+			
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/pass"
+	    		android:paddingRight="@dimen/textAndEditPaddingR" />
+	        
+	        <EditText android:id="@+id/etPass" 
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:inputType="textPassword" />
+	        
+	    </LinearLayout>
+	</ScrollView>    
+    
+    <Button android:id="@+id/btnRegister"
+        android:layout_width="@dimen/smallBtnW"
+        android:layout_height="@dimen/smallBtnH"
+        android:text="@string/register" />
+
+</LinearLayout>

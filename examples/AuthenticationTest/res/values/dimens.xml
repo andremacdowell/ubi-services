@@ -6,6 +6,9 @@
     <dimen name="textAndEditW">260dp</dimen>
     <dimen name="bigBtnW">140dp</dimen>
     <dimen name="bigBtnH">120dp</dimen>
+    <dimen name="smallBtnW">110dp</dimen>
+    <dimen name="smallBtnH">60dp</dimen>
+    <dimen name="tabFragmentPaddingT">80dp</dimen>
     <dimen name="textAndEditPaddingB">20dp</dimen>
     <dimen name="textAndEditPaddingR">8dp</dimen>
 

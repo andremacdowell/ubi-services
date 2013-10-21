@@ -23,7 +23,7 @@ public class ResponseInfo implements Serializable {
 	public ResponseInfo(UUID id, String type, String payload) {
 		_uuid = id;
 		_payload = payload;
-		_type = payload;
+		_type = type;
 	}
 	
 	public UUID getUuid() {
