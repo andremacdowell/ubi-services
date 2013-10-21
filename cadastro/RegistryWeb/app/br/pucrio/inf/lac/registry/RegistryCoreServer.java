@@ -48,6 +48,49 @@ public class RegistryCoreServer implements
 		}
 	}
 
+	public static JsonNode handleRequest(RequestInfo requestMessage) {
+		System.out.println("[RegistryCoreServer] Request type: "
+				+ requestMessage.getType() + " | payload: "
+				+ requestMessage.getPayload());
+
+		JsonNode result_json = Json.newObject();
+
+		switch (requestMessage.getType()) {
+		case "addNode":
+			result_json = CrudLib.addNode(Json.parse(requestMessage
+					.getPayload()));
+			break;
+		case "getNode":
+			result_json = CrudLib.getNode(requestMessage.getPayload());
+			break;
+		case "lstNodes":
+			result_json = CrudLib.lstNodes();
+			break;
+		case "srchNodes":
+			result_json = CrudLib.srchNodes(requestMessage.getPayload());
+			break;
+		case "updNode":
+			result_json = CrudLib.updNode(requestMessage.getPayload(),
+					Json.parse(requestMessage.getPayload()));
+			break;
+		case "delNode":
+			result_json = CrudLib.delNode(requestMessage.getPayload());
+			break;
+		default:
+			System.out
+					.println("[RegistryCoreServer] Request type not recognized by server");
+			ObjectNode result = Json.newObject();
+			result.put("status", "ERR");
+			result.put("message", "Request type not recognized by server");
+			result.put("type", requestMessage.getType());
+			result.put("payload", "");
+			result_json = Json.fromJson(result, JsonNode.class);
+			break;
+		}
+
+		return result_json;
+	}
+
 	@Override
 	public void onNewData(ApplicationObject topicSample) {
 		Message message = (Message) topicSample;
@@ -65,46 +108,8 @@ public class RegistryCoreServer implements
 				// REQUEST recv
 				RequestInfo requestMessage = (RequestInfo) Serialization
 						.fromJavaByteStream(message.getContent());
-				System.out.println("[RegistryCoreServer] Request type: "
-						+ requestMessage.getType() + " | payload: "
-						+ requestMessage.getPayload());
-
 				JsonNode result_json = Json.newObject();
-
-				switch (requestMessage.getType()) {
-				case "addNode":
-					result_json = CrudLib.addNode(Json.parse(requestMessage
-							.getPayload()));
-					break;
-				case "getNode":
-					result_json = CrudLib.getNode(requestMessage.getPayload());
-					break;
-				case "lstNodes":
-					result_json = CrudLib.lstNodes();
-					break;
-				case "srchNodes":
-					result_json = CrudLib
-							.srchNodes(requestMessage.getPayload());
-					break;
-				case "updNode":
-					result_json = CrudLib.updNode(requestMessage.getPayload(),
-							Json.parse(requestMessage.getPayload()));
-					break;
-				case "delNode":
-					result_json = CrudLib.delNode(requestMessage.getPayload());
-					break;
-				default:
-					System.out
-							.println("[RegistryCoreServer] Request type not recognized by server");
-					ObjectNode result = Json.newObject();
-					result.put("status", "ERR");
-					result.put("message",
-							"Request type not recognized by server");
-					result.put("type", requestMessage.getType());
-					result.put("payload", "");
-					result_json = Json.fromJson(result, JsonNode.class);
-					break;
-				}
+				result_json = handleRequest(requestMessage);
 
 				// RESPONSE send
 				ResponseInfo responseMessage = new ResponseInfo(
