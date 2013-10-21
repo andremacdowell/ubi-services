@@ -1,5 +1,6 @@
 package br.pucrio.inf.lac.login;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,6 +14,7 @@ import lac.cnet.sddl.udi.core.SddlLayer;
 import lac.cnet.sddl.udi.core.UniversalDDSLayerFactory;
 import lac.cnet.sddl.udi.core.listener.UDIDataReaderListener;
 import modellibrary.RequestInfo;
+import modellibrary.ResponseInfo;
 import play.libs.Json;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,52 +53,86 @@ public class LoginCoreServer implements
 	@Override
 	public void onNewData(ApplicationObject topicSample) {
 		Message message = (Message) topicSample;
-		System.out.println("[LoginCoreServer] Mensagem recebida do cliente: "
-				+ Serialization.fromJavaByteStream(message.getContent()));
-
-		// PrivateMessage privateMessage = new PrivateMessage();
-		// privateMessage.setGatewayId(message.getGatewayId());
-		// privateMessage.setNodeId(message.getSenderId());
-
-		String className = message.getContent().getClass().getCanonicalName();
+		Serializable serializable = Serialization.fromJavaByteStream(message
+				.getContent());
+		String className = serializable.getClass().getCanonicalName();
 		String uuid = message.getSenderId().toString();
-		System.out.println("className:"+className+" \nuuid:"+uuid);
+
+		System.out.println("[LoginCoreServerr] Mensagem recebida do cliente: "
+				+ Serialization.fromJavaByteStream(message.getContent())
+				+ "| className:" + className + " | uuid:" + uuid);
+
 		if (className != null) {
 			if (className.equals(RequestInfo.class.getCanonicalName())) {
-				JsonNode json;
-				// REQUEST
-				RequestInfo req = (RequestInfo) Serialization
+				// REQUEST recv
+				RequestInfo requestMessage = (RequestInfo) Serialization
 						.fromJavaByteStream(message.getContent());
 				System.out.println("[LoginCoreServer] Request type: "
-						+ req.getType() + " | payload: " + req.getPayload());
+						+ requestMessage.getType() + " | payload: "
+						+ requestMessage.getPayload());
 
-				String type = req.getType();
-				ObjectNode result_json = Json.newObject();
-				JsonNode authReq = Json.parse(req.getPayload());
-				String login = authReq.get("login").toString();
-				String senha = authReq.get("senha").toString();
-				String token = authReq.get("token").toString();
-				if (type.equals("login")) {
-					// se já está autenticado, validar autenticação
+				JsonNode result_json = Json.newObject();
+				ObjectNode result = Json.newObject();
+				ObjectNode obj_r = Json.newObject();
+
+				JsonNode json;
+				switch (requestMessage.getType()) {
+				case "login":
+					JsonNode authReq = Json.parse(requestMessage.getPayload());
+					ObjectNode query = Json.newObject();
+					String login = authReq.get("login").toString();
+					String senha = authReq.get("senha").toString();
+					String token = authReq.get("token").toString();
+
+					query.put("uuid", message.getSenderId().toString());
+					json = CrudLib.getNode(query.toString());
+
 					if (token != null) {
-						json = CrudLib
-								.getNode(message.getSenderId().toString());
-						if (token.equals(json.get("token").toString())) {
-							result_json.put("status", "ok");
-							result_json.put("token", token);
-						} else {
-							result_json.put("status", "erro");
+						if (json != null) {
+							if (token.equals(json.get("token").toString())) {
+								result.put("status", "OK");
+								result.put("message", "Login com sucesso");
+								result.put("type", requestMessage.getType());
+								obj_r.put("token", token);
+								result.put("payload", obj_r.toString());
+								result_json = Json.fromJson(result,
+										JsonNode.class);
+							} else {
+								result.put("status", "ERR");
+								result.put("message", "token inválido");
+								result.put("type", requestMessage.getType());
+								result.put("payload", "");
+								result_json = Json.fromJson(result,
+										JsonNode.class);
+							}
+						}
+						else {
+							result.put("status", "ERR");
+							result.put("message", "token inválido");
+							result.put("type", requestMessage.getType());
+							result.put("payload", "");
+							result_json = Json.fromJson(result,
+									JsonNode.class);
 						}
 					} else {
-						// procurar!
-						json = CrudLib.getNode(uuid);
+						// procurar login e senha
 						if (json != null) {
 							if (login.equals(json.get("login"))
 									&& senha.equals(json.get("senha"))) {
-								result_json.put("status", "ok");
-								result_json.put("token", token);
+								result.put("status", "OK");
+								result.put("message", "Login com sucesso");
+								result.put("type", requestMessage.getType());
+								obj_r.put("token", token);
+								result.put("payload", obj_r.toString());
+								result_json = Json.fromJson(result,
+										JsonNode.class);
 							} else {
-								result_json.put("status", "erro");
+								result.put("status", "ERR");
+								result.put("message", "login ou senha inválidos");
+								result.put("type", requestMessage.getType());
+								result.put("payload", "");
+								result_json = Json.fromJson(result,
+										JsonNode.class);
 							}
 						} else {
 							// se não existir, criar e depois retornar a token
@@ -119,37 +155,30 @@ public class LoginCoreServer implements
 							}
 
 							newAuth.put("token", token);
-							json = CrudLib.addNode(newAuth);
-							if (json.get("status").toString().equals("OK")) {
-								result_json.put("status", "ok");
-								result_json.put("token", token);
-							}
-
+							result_json = CrudLib.addNode(newAuth);
+							obj_r.put("token", token);
+							result.put("payload", obj_r.toString());
 						}
 					}
-				}
-				else if (type.equals("logout")){
+					break;
+				case "logout":
 					ObjectNode upAuth = Json.newObject();
 					upAuth.put("token", "");
-					json = CrudLib.updNode(uuid, upAuth);
-					if (json.get("status").toString().equals("OK")) {
-						result_json.put("status", "ok");
-						result_json.put("token", token);
-					}
+					result_json = CrudLib.updNode(uuid, upAuth);					
+					break;
 				}
-					
-				// RESPONSE
+
+				// RESPONSE send
+				ResponseInfo responseMessage = new ResponseInfo(
+						message.getSenderId(), requestMessage.getType(),
+						result_json.toString());
+
 				PrivateMessage privateMessage = new PrivateMessage();
 				privateMessage.setGatewayId(message.getGatewayId());
 				privateMessage.setNodeId(message.getSenderId());
 
-				// JsonNode result_json = Json.newObject();
-				System.out
-						.println("[LoginCoreServer] lstNodes() requested by client");
-				// result_json = CrudLib.lstNodes();
-
 				ApplicationMessage appMessage = new ApplicationMessage();
-				appMessage.setContentObject(result_json.toString());
+				appMessage.setContentObject(responseMessage);
 				privateMessage.setMessage(Serialization
 						.toProtocolMessage(appMessage));
 

@@ -19,7 +19,6 @@ import play.libs.Json;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-
 public class LoginCoreClient implements NodeConnectionListener {
 
 	private static String gatewayIP = "127.0.0.1";
@@ -27,10 +26,6 @@ public class LoginCoreClient implements NodeConnectionListener {
 	private MrUdpNodeConnection connection;
 	/** Client UUID */
 	private static UUID uuid = null;
-	
-	/** Authentication Info */
-	private String email;
-	private String password;
 
 	public static void main(String[] args) {
 		Logger.getLogger("").setLevel(Level.OFF);
@@ -39,10 +34,10 @@ public class LoginCoreClient implements NodeConnectionListener {
 	}
 
 	public LoginCoreClient() {
-		if ( uuid == null ) {
-			uuid = UUID.randomUUID();			
+		if (uuid == null) {
+			uuid = UUID.randomUUID();
 		}
-		
+
 		InetSocketAddress address = new InetSocketAddress(gatewayIP,
 				gatewayPort);
 		try {
@@ -58,26 +53,62 @@ public class LoginCoreClient implements NodeConnectionListener {
 	public void connected(NodeConnection remoteCon) {
 		System.out.println("[LoginCoreClient] Conectou, enviando saudação.");
 		ApplicationMessage appMessage = new ApplicationMessage();
-//		String serializableContent = "Registering mobile node requested by client.";
+		String serializableContent = "";
+
+		// REQUEST login: passando login e senha (criação)
 		ObjectNode objLogin = Json.newObject();
 		objLogin.put("login", "ivan");
 		objLogin.put("senha", "123");
-		RequestInfo req = new RequestInfo(uuid,"login",objLogin.toString());
-		
-		appMessage.setContentObject(req);
-
+		RequestInfo requestMessage = new RequestInfo(appMessage.getSenderID(),
+				"login", objLogin.toString());
+		appMessage.setContentObject(requestMessage);
 		try {
 			remoteCon.sendMessage(appMessage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
+		// REQUEST login: passando token (validação)
+		objLogin = Json.newObject();
+		objLogin.put("token", "????");
+		requestMessage = new RequestInfo(appMessage.getSenderID(), "login",
+				objLogin.toString());
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
+		// REQUEST logout
+		requestMessage = new RequestInfo(appMessage.getSenderID(), "logout", "");
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	@Override
 	public void newMessageReceived(NodeConnection remoteCon, Message message) {
-		System.out
-				.println("[LoginCoreClient] Mensagem recebida do servidor: "
-						+ Serialization.fromJavaByteStream(message.getContent()));
+		System.out.println("[LoginCoreClient] Mensagem recebida do servidor: "
+				+ Serialization.fromJavaByteStream(message.getContent()));
 	}
 
 	// other methods
