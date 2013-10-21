@@ -51,26 +51,112 @@ public class RegistryCoreClient implements NodeConnectionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		// REQUEST
+
+		// REQUEST send
+
+		RequestInfo requestMessage = new RequestInfo(appMessage.getSenderID(),
+				"lstNodes", "");
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
+		requestMessage = new RequestInfo(appMessage.getSenderID(), "srchNodes",
+				"teste");
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
+		requestMessage = new RequestInfo(appMessage.getSenderID(), "getNode",
+				"teste");
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
+		requestMessage = new RequestInfo(appMessage.getSenderID(), "delNode",
+				"teste");
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
+		requestMessage = new RequestInfo(appMessage.getSenderID(), "getNode",
+				"teste");
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
+		requestMessage = new RequestInfo(appMessage.getSenderID(), "lstNodes",
+				"");
+		appMessage.setContentObject(requestMessage);
+		try {
+			remoteCon.sendMessage(appMessage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	@Override
 	public void newMessageReceived(NodeConnection remoteCon, Message message) {
-		System.out
-				.println("[RegistryCoreClient] Mensagem recebida do servidor: "
-						+ Serialization.fromJavaByteStream(message.getContent()));
-
 		String className = message.getContentObject().getClass()
 				.getCanonicalName();
 
+		System.out
+				.println("[RegistryCoreClient] Mensagem recebida do servidor: "
+						+ Serialization.fromJavaByteStream(message.getContent())
+						+ " | " + className);
+
 		if (className != null) {
-			// RESPONSE
+			// RESPONSE recv
 			if (className.equals(ResponseInfo.class.getCanonicalName())) {
-				ResponseInfo resp = (ResponseInfo) Serialization
+				ResponseInfo responseMessage = (ResponseInfo) Serialization
 						.fromJavaByteStream(message.getContent());
 				System.out.println("[RegistryCoreClient] Response type: "
-						+ resp.getType() + " | payload: " + resp.getPayload());
+						+ responseMessage.getType() + " | payload: "
+						+ responseMessage.getPayload());
 			} else {
 				System.out
 						.println("[RegistryCoreClient] Objeto desconhecido recebido do servidor: "

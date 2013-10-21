@@ -3,6 +3,7 @@ package br.pucrio.inf.lac.registry;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import play.libs.Json;
 
@@ -50,33 +51,72 @@ public class RegistryCoreServer implements
 	@Override
 	public void onNewData(ApplicationObject topicSample) {
 		Message message = (Message) topicSample;
+		Serializable serializable = Serialization.fromJavaByteStream(message
+				.getContent());
+		String className = serializable.getClass().getCanonicalName();
 
 		System.out
 				.println("[RegistryCoreServer] Mensagem recebida do cliente: "
-						+ Serialization.fromJavaByteStream(message.getContent()));
-
-		String className = message.getContent().getClass().getCanonicalName();
+						+ Serialization.fromJavaByteStream(message.getContent())
+						+ " | " + className);
 
 		if (className != null) {
 			if (className.equals(RequestInfo.class.getCanonicalName())) {
-				// REQUEST
-				RequestInfo req = (RequestInfo) Serialization
+				// REQUEST recv
+				RequestInfo requestMessage = (RequestInfo) Serialization
 						.fromJavaByteStream(message.getContent());
 				System.out.println("[RegistryCoreServer] Request type: "
-						+ req.getType() + " | payload: " + req.getPayload());
+						+ requestMessage.getType() + " | payload: "
+						+ requestMessage.getPayload());
 
-				// RESPONSE
+				JsonNode result_json = Json.newObject();
+
+				switch (requestMessage.getType()) {
+				case "addNode":
+					result_json = CrudLib.addNode(Json.parse(requestMessage
+							.getPayload()));
+					break;
+				case "getNode":
+					result_json = CrudLib.getNode(requestMessage.getPayload());
+					break;
+				case "lstNodes":
+					result_json = CrudLib.lstNodes();
+					break;
+				case "srchNodes":
+					result_json = CrudLib
+							.srchNodes(requestMessage.getPayload());
+					break;
+				case "updNode":
+					result_json = CrudLib.updNode(requestMessage.getPayload(),
+							Json.parse(requestMessage.getPayload()));
+					break;
+				case "delNode":
+					result_json = CrudLib.delNode(requestMessage.getPayload());
+					break;
+				default:
+					System.out
+							.println("[RegistryCoreServer] Request type not recognized by server");
+					ObjectNode result = Json.newObject();
+					result.put("status", "ERR");
+					result.put("message",
+							"Request type not recognized by server");
+					result.put("type", requestMessage.getType());
+					result.put("payload", "");
+					result_json = Json.fromJson(result, JsonNode.class);
+					break;
+				}
+
+				// RESPONSE send
+				ResponseInfo responseMessage = new ResponseInfo(
+						message.getSenderId(), requestMessage.getType(),
+						result_json.toString());
+
 				PrivateMessage privateMessage = new PrivateMessage();
 				privateMessage.setGatewayId(message.getGatewayId());
 				privateMessage.setNodeId(message.getSenderId());
 
-				JsonNode result_json = Json.newObject();
-				System.out
-						.println("[RegistryCoreServer] lstNodes() requested by client");
-				result_json = CrudLib.lstNodes();
-
 				ApplicationMessage appMessage = new ApplicationMessage();
-				appMessage.setContentObject(result_json.toString());
+				appMessage.setContentObject(responseMessage);
 				privateMessage.setMessage(Serialization
 						.toProtocolMessage(appMessage));
 
@@ -93,7 +133,3 @@ public class RegistryCoreServer implements
 		}
 	}
 }
-
-// Serializable serializable =
-// Serialization.fromJavaByteStream(message.getContent());
-// String className = serializable.getClass().getCanonicalName();
