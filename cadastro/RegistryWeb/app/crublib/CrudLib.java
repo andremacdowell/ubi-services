@@ -25,6 +25,7 @@ public class CrudLib {
 			result.put("message", "Node added");
 			result.put("payload", Json.toJson(node));
 		} catch (Exception e) {
+			System.out.println("[CrudLib] ERR: " + e);
 			result.put("status", "ERR");
 			result.put("message", "Node not added");
 			result.put("payload", e.toString());
@@ -61,6 +62,8 @@ public class CrudLib {
 			result.put("message", "Node found by name: " + uuid_name);
 			result.put("payload", Json.toJson(namelist));
 		} else {
+			System.out.println("[CrudLib] Não foi encontrado node: "
+					+ uuid_name);
 			result.put("status", "ERR");
 			result.put("message", "Node not found");
 			result.put("payload", uuid_name);
@@ -113,6 +116,9 @@ public class CrudLib {
 			result.put("message", "Nodes found by name substring: " + uuid_name);
 			result.put("payload", Json.toJson(namelist));
 		} else {
+			System.out
+					.println("[CrudLib] Não foi encontrado node contendo substring: "
+							+ uuid_name);
 			result.put("status", "ERR");
 			result.put("message", "No node found");
 			result.put("payload", "Substring search: " + uuid_name);
@@ -173,6 +179,7 @@ public class CrudLib {
 			System.out.println("[CrudLib] ERR: " + e);
 		}
 
+		System.out.println("[CrudLib] Não foi encontrado node: " + uuid_name);
 		result.put("status", "ERR");
 		result.put("message", "Node not found");
 		result.put("payload", uuid_name);
@@ -224,6 +231,7 @@ public class CrudLib {
 			System.out.println("[CrudLib] ERR: " + e);
 		}
 
+		System.out.println("[CrudLib] Não foi encontrado node: " + uuid_name);
 		result.put("status", "ERR");
 		result.put("message", "Node not found");
 		result.put("payload", uuid_name);

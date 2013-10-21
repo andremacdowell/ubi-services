@@ -18,6 +18,7 @@ public class API extends Controller {
 		System.out.println("[API] POST /api/nodes: " + json);
 
 		if (json == null) {
+			System.out.println("[API] Node not added: Expecting Json data");
 			result.put("status", "ERR");
 			result.put("message", "Node not added: Expecting Json data");
 			result.put("type", "addNode");
@@ -70,6 +71,7 @@ public class API extends Controller {
 				+ " com o conteudo: " + json);
 
 		if (json == null) {
+			System.out.println("[API] Node not added: Expecting Json data");
 			result.put("status", "ERR");
 			result.put("message", "Node not updated: Expecting Json data");
 			result.put("type", "updNode");
