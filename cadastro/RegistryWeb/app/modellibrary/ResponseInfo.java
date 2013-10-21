@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class ResponseInfo implements Serializable {
-
 	/**
 	 * Default Java serial version UID
 	 **/
@@ -20,8 +19,8 @@ public class ResponseInfo implements Serializable {
 	 **/
 	public ResponseInfo(UUID id, String type, String payload) {
 		_uuid = id;
+		_type = type;
 		_payload = payload;
-		_type = payload;
 	}
 	
 	public UUID getUuid() {

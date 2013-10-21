@@ -4,15 +4,12 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * Serializavel PingInfo. 
- * Será visto tanto pelo Cliente Android quando pela Módulo Controlador, então 
- * recomenda-se que fique em algum tipo de projeto-library visto pelos dois.
+ * Serializavel PingInfo.
  * 
  * @author andremd
- *
+ * 
  */
 public class PingInfo implements Serializable {
-	
 	/**
 	 * Default Java serial version UID
 	 **/
@@ -27,7 +24,7 @@ public class PingInfo implements Serializable {
 	public PingInfo(UUID _id) {
 		uuid = _id;
 	}
-	
+
 	public UUID getUuid() {
 		return uuid;
 	}
@@ -35,12 +32,12 @@ public class PingInfo implements Serializable {
 	public void setUuid(UUID uuid) {
 		this.uuid = uuid;
 	}
-	
+
 	/**
-     * {@inheritDoc}
-     **/
-    @Override
-    public String toString() {
-    	return "Pong!";
+	 * {@inheritDoc}
+	 **/
+	@Override
+	public String toString() {
+		return "Pong!";
 	}
 }

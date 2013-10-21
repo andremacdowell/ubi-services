@@ -4,15 +4,12 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * Serializavel AuthInfo. 
- * Será visto tanto pelo Cliente Android quando pela Módulo Controlador, então 
- * recomenda-se que fique em algum tipo de projeto-library visto pelos dois.
+ * Serializavel AuthInfo.
  * 
  * @author andremd
- *
+ * 
  */
 public class AuthInfo implements Serializable {
-	
 	/**
 	 * Default Java serial version UID
 	 **/
@@ -20,7 +17,7 @@ public class AuthInfo implements Serializable {
 
 	/** Client UUID */
 	private UUID uuid;
-	
+
 	/** Authentication Info */
 	private String email;
 	private String password;
@@ -33,7 +30,7 @@ public class AuthInfo implements Serializable {
 		email = _name;
 		password = _pass;
 	}
-	
+
 	public UUID getUuid() {
 		return uuid;
 	}
@@ -45,22 +42,21 @@ public class AuthInfo implements Serializable {
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public String getTypeName() {
 		return "authNode";
 	}
-	
+
 	/**
-     * {@inheritDoc}
-     **/
-    @Override
-    public String toString() {
-    	return "uuid:" + uuid + "|" + "email:" + email + "|" + "pass:" + password;
+	 * {@inheritDoc}
+	 **/
+	@Override
+	public String toString() {
+		return "uuid:" + uuid + "|" + "email:" + email + "|" + "pass:"
+				+ password;
 	}
-    
-    
 }
