@@ -52,13 +52,13 @@ public class CrudLib {
 			System.out.println("[CrudLib] Encontrado node por uuid: "
 					+ uuid_name);
 			result.put("status", "OK");
-			result.put("message", "Node found by uuid");
+			result.put("message", "Node found by uuid: " + uuid_name);
 			result.put("payload", Json.toJson(uuidlist));
 		} else if (!namelist.isEmpty()) {
 			System.out.println("[CrudLib] Encontrado node por name: "
 					+ uuid_name);
 			result.put("status", "OK");
-			result.put("message", "Node found by name");
+			result.put("message", "Node found by name: " + uuid_name);
 			result.put("payload", Json.toJson(namelist));
 		} else {
 			result.put("status", "ERR");
@@ -104,13 +104,13 @@ public class CrudLib {
 			System.out.println("[CrudLib] Encontrado node por uuid contendo: "
 					+ uuid_name);
 			result.put("status", "OK");
-			result.put("message", "Nodes found by uuid");
+			result.put("message", "Nodes found by uuid substring: " + uuid_name);
 			result.put("payload", Json.toJson(uuidlist));
 		} else if (!namelist.isEmpty()) {
 			System.out.println("[CrudLib] Encontrado node por name contendo: "
 					+ uuid_name);
 			result.put("status", "OK");
-			result.put("message", "Nodes found by name");
+			result.put("message", "Nodes found by name substring: " + uuid_name);
 			result.put("payload", Json.toJson(namelist));
 		} else {
 			result.put("status", "ERR");
@@ -143,7 +143,7 @@ public class CrudLib {
 						+ uuid_name + "\" com conteúdo: " + Json.toJson(node));
 				uuidnode.save();
 				result.put("status", "OK");
-				result.put("message", "Node updated by uuid");
+				result.put("message", "Node updated by uuid: " + uuid_name);
 				result.put("payload", Json.toJson(node));
 				result_json = Json.fromJson(result, JsonNode.class);
 				return result_json;
@@ -164,7 +164,7 @@ public class CrudLib {
 						+ uuid_name + "\" com conteúdo: " + Json.toJson(node));
 				namenode.save();
 				result.put("status", "OK");
-				result.put("message", "Node updated by name");
+				result.put("message", "Node updated by name: " + uuid_name);
 				result.put("payload", Json.toJson(node));
 				result_json = Json.fromJson(result, JsonNode.class);
 				return result_json;
