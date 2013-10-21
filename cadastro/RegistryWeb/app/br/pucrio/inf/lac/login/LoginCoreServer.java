@@ -84,9 +84,10 @@ public class LoginCoreServer implements
 					JsonNode authReq = Json.parse(requestMessage.getPayload());
 
 					json = CrudLib.getNode(message.getSenderId().toString());
-					System.out.println("json: " + json.toString());
+					System.out.println("[LoginCoreServer] json: " + json.toString());
 					if (authReq.get("token") != null) {
 						token = authReq.get("token").toString();
+						System.out.println("[LoginCoreServer] Passando token" + token);
 						if (json.get("status").equals("OK")) {
 							if (token.equals(json.get("token").toString())) {
 								result.put("status", "OK");
@@ -112,10 +113,11 @@ public class LoginCoreServer implements
 							result_json = Json.fromJson(result, JsonNode.class);
 						}
 					} else {
-						// procurar login e senha
 						login = authReq.get("login").toString();
 						senha = authReq.get("senha").toString();
-						if (json != null) {
+						System.out.println("[LoginCoreServer] procurar login: " + login
+								+ " e senha: " + senha);
+						if (json.get("status").equals("OK")) {
 							if (login.equals(json.get("login"))
 									&& senha.equals(json.get("senha"))) {
 								result.put("status", "OK");
@@ -137,6 +139,7 @@ public class LoginCoreServer implements
 						} else {
 							// se não existir, criar e depois retornar a
 							// token
+							System.out.println("[LoginCoreServer] criar novo no");
 							ObjectNode newAuth = Json.newObject();
 							newAuth.put("login", login);
 							newAuth.put("senha", senha);
@@ -156,9 +159,10 @@ public class LoginCoreServer implements
 							}
 
 							newAuth.put("token", token);
-							result_json = CrudLib.addNode(newAuth);
-							obj_r.put("token", token);
-							result.put("payload", obj_r.toString());
+							obj_r.put("uuid", uuid);
+							obj_r.put("name",login);
+							obj_r.put("info", newAuth.toString());
+							result_json = CrudLib.addNode(obj_r);
 						}
 					}
 					break;
@@ -170,6 +174,8 @@ public class LoginCoreServer implements
 				}
 
 				// RESPONSE send
+				System.out.println("[LoginCoreServer] mensagem de resposta:"
+						+ result_json.toString());
 				ResponseInfo responseMessage = new ResponseInfo(
 						message.getSenderId(), requestMessage.getType(),
 						result_json.toString());
@@ -194,19 +200,6 @@ public class LoginCoreServer implements
 			System.out
 					.println("[LoginCoreServer] Objeto inválido recebido do cliente");
 		}
-		// JsonNode result_json = Json.newObject();
-		// System.out
-		// .println("[RegistryCoreServer] lstNodes() requested by client");
-		// result_json = CrudLib.lstNodes();
-		//
-		// ApplicationMessage appMessage = new ApplicationMessage();
-		// // appMessage.setContentObject("Recebi do cliente: " +
-		// // Serialization.fromJavaByteStream(message.getContent()));
-		// appMessage.setContentObject(result_json.toString());
-		// privateMessage.setMessage(Serialization.toProtocolMessage(appMessage));
-		//
-		// core.writeTopic(PrivateMessage.class.getSimpleName(),
-		// privateMessage);
 	}
 }
 

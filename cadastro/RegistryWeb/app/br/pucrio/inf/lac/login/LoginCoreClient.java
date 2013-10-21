@@ -72,7 +72,7 @@ public class LoginCoreClient implements NodeConnectionListener {
 
 		// REQUEST login: passando token (validação)
 		objLogin = Json.newObject();
-		objLogin.put("token", "????");
+		objLogin.put("token", "[B@123b94a");
 		requestMessage = new RequestInfo(appMessage.getSenderID(), "login",
 				objLogin.toString());
 		appMessage.setContentObject(requestMessage);
