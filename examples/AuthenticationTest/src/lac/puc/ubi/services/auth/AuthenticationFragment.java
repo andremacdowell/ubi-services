@@ -2,7 +2,7 @@ package lac.puc.ubi.services.auth;
 
 import lac.puc.ubi.services.R;
 import lac.puc.ubi.services.auth.connection.ConnectionTask;
-import lac.puc.ubi.services.modellibrary.AuthInfo;
+import modellibrary.AuthInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

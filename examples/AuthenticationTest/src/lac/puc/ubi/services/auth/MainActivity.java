@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,9 +28,8 @@ import android.widget.Toast;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
 	//Connection Control
-	private static String IP = "192.168.1.255";	
+	private static String IP = "192.168.0.7";	
 	private static Handler msgHandler;
-	private Context context;
 	private UUID clientUUID;
 	
 	//Interface
@@ -113,13 +111,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				String status = msg.getData().getString("status");
 				
 				if (status.equals("connected")) {
-					Toast.makeText(context, "Conectado!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MainActivity.this, "Conectado!", Toast.LENGTH_SHORT).show();
 				}
 				else if (status.equals("disconnected")) {
-					Toast.makeText(context, "Desconectado!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MainActivity.this, "Desconectado!", Toast.LENGTH_SHORT).show();
 				}
 				else if (status.equals("message")) {
-					Toast.makeText(context, msg.getData().getString("message"), Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, msg.getData().getString("message"), Toast.LENGTH_LONG).show();
 				}
 				else if (status.equals("event")) {
 					//outro tipo de evento, podemos usar isso para tratar o recebimento de outros tipos de objetos

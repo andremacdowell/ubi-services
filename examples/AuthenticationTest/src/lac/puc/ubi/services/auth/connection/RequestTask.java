@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import lac.cnclib.net.NodeConnection;
 import lac.cnclib.sddl.message.ApplicationMessage;
-import lac.puc.ubi.services.modellibrary.RequestInfo;
+import modellibrary.RequestInfo;
 import android.os.AsyncTask;
 
 /**

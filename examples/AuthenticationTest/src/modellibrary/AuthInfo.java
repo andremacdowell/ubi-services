@@ -1,4 +1,4 @@
-package lac.puc.ubi.services.modellibrary;
+package modellibrary;
 
 import java.io.Serializable;
 import java.util.UUID;

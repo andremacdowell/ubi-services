@@ -5,7 +5,7 @@ import java.util.List;
 
 import lac.cnclib.net.NodeConnection;
 import lac.cnclib.net.NodeConnectionListener;
-import lac.puc.ubi.services.modellibrary.AuthInfo;
+import modellibrary.AuthInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;

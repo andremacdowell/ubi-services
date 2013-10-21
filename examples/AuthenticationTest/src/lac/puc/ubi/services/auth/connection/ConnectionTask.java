@@ -6,7 +6,7 @@ import java.net.SocketAddress;
 
 import lac.cnclib.net.NodeConnection;
 import lac.cnclib.net.mrudp.MrUdpNodeConnection;
-import lac.puc.ubi.services.modellibrary.AuthInfo;
+import modellibrary.AuthInfo;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -79,7 +79,7 @@ public class ConnectionTask extends AsyncTask<Void, byte[], Boolean> {
 			authTask.execute();
 		}
 		else
-			Toast.makeText(context, "Impossible to Connect!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Impossible to Connect!", Toast.LENGTH_LONG).show();
 	}
 	  
 	public NodeConnection getMyConnection() {

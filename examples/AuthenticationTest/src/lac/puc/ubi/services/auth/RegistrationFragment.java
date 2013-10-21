@@ -70,18 +70,32 @@ public class RegistrationFragment extends Fragment implements OnClickListener{
         }
 	}
 
+	private String parseDateString(DatePicker dp)
+	{
+		int day = dp.getDayOfMonth() + 1;
+		int month = dp.getMonth() + 1;
+		int year = dp.getYear() + 1;
+		
+		return day + "-" + month + "-" + year;
+	}
+	
 	private String packageRegistrationInfo()
 	{
 		JSONObject result = new JSONObject();
+		JSONObject info = new JSONObject();
 		
 		try {
 			result.put("uuid", ap.uuid.toString());
-			result.put("email", et_email.getText().toString());
 			result.put("name", et_name.getText().toString());
-			result.put("city", et_city.getText().toString());
-			result.put("phone", et_phone.getText().toString());
-			result.put("birthday", dp_birth.toString());
-			result.put("pass", et_pass.getText().toString());
+			
+			info.put("email", et_email.getText().toString());
+			info.put("city", et_city.getText().toString());
+			info.put("phone", et_phone.getText().toString());
+			info.put("birthday", parseDateString(dp_birth));
+			info.put("pass", et_pass.getText().toString());
+			
+			result.put("info", info);
+			
 			} catch (JSONException e) {
 			
 			e.printStackTrace();
