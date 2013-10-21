@@ -1,9 +1,16 @@
 package lac.puc.ubi.services.auth;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import lac.puc.ubi.services.R;
 import lac.puc.ubi.services.auth.utils.TabsPagerAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -37,7 +44,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
 	// Tab titles
-	private String[] tabs = {"Login", "New User"};
+	private String[] tabs = {"Login", "New User", "Search User"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +126,43 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 				else if (status.equals("message")) {
 					Toast.makeText(MainActivity.this, msg.getData().getString("message"), Toast.LENGTH_LONG).show();
 				}
-				else if (status.equals("event")) {
-					//outro tipo de evento, podemos usar isso para tratar o recebimento de outros tipos de objetos
+				else if (status.equals("response")) 
+				{
+					String type = msg.getData().getString("type");
+					if(type.equals("authNode"))
+					{
+						//TODO:
+					}
+					else if(type.equals("addNode"))
+					{
+						//TODO:
+					}
+					else if(type.equals("srchNodes"))
+					{
+						JSONArray payloadArray = null;
+						try {
+							String sPayload = (new JSONObject(msg.getData().getString("data"))).getString("payload");
+							payloadArray = new JSONArray(sPayload);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						if(payloadArray != null)
+						{
+							List<String> resultList = new ArrayList<String>();
+							for(int i = 0; i < payloadArray.length(); i++)
+							{
+								try {
+									resultList.add(payloadArray.getString(i));
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+							((SearchFragment) mAdapter.getCurrentFragment()).populateList(resultList);
+						}
+					}
+				}
+				else if (status.equals("request")) {
+					//TODO
 				}
 			}
 		}

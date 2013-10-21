@@ -94,7 +94,7 @@ public class RegistrationFragment extends Fragment implements OnClickListener{
 			info.put("birthday", parseDateString(dp_birth));
 			info.put("pass", et_pass.getText().toString());
 			
-			result.put("info", info);
+			result.put("info", info.toString());
 			
 			} catch (JSONException e) {
 			

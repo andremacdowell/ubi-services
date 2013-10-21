@@ -83,7 +83,7 @@ public class AuthInfo implements Serializable {
 			info.put("password", password);
 			info.put("token", token);
 			
-			result.put("info", info);
+			result.put("info", info.toString());
 			
 			} catch (JSONException e) {
 			

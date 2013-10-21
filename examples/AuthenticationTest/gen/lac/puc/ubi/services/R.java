@@ -30,6 +30,7 @@ public final class R {
     public static final class id {
         public static final int btnConnect=0x7f070004;
         public static final int btnRegister=0x7f070009;
+        public static final int btnSearch=0x7f07000a;
         public static final int dpBirth=0x7f070008;
         public static final int etCity=0x7f070006;
         public static final int etEmail=0x7f070002;
@@ -43,6 +44,7 @@ public final class R {
         public static final int activity_main=0x7f030000;
         public static final int fragment_authentication=0x7f030001;
         public static final int fragment_registration=0x7f030002;
+        public static final int fragment_search=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
@@ -58,6 +60,7 @@ public final class R {
         public static final int pass=0x7f050003;
         public static final int phone=0x7f050005;
         public static final int register=0x7f050008;
+        public static final int search=0x7f050009;
     }
     public static final class style {
         /** 

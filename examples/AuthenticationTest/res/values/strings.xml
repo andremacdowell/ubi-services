@@ -14,5 +14,6 @@
     <!-- Static Button Texts -->
     <string name="connect">Connect!</string>
     <string name="register">Register!</string>
+    <string name="search">Search!</string>
 
 </resources>
